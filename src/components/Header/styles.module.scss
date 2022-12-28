@@ -25,7 +25,8 @@
         margin-left: 2rem;
       }
       &:hover{
-        color: var(--white)
+        color: var(--white);
+        cursor: pointer;
       }
       &.active{
         color: var(--white);
