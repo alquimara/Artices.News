@@ -10,6 +10,10 @@
   padding: 0 2rem;
   display: flex;
   align-items: center;
+  img {
+    height: 130px;
+    z-index: -1;
+  }
   nav{
     margin-left: 5rem;
     height: 5rem;
