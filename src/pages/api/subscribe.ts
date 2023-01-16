@@ -1,24 +1,56 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { NextApiRequest, NextApiResponse } from "next";
 import { stripe } from '../../services/stripe';
 import { getSession } from "next-auth/react";
+import {fauna } from '../../services/fauna';
+import {query as qry} from 'faunadb'
+
+type User={
+  ref:{
+    id: string
+  },
+  data:{
+    stripe_custormes_id: string
+  }
+}
+
 
 export default async(req: NextApiRequest, res: NextApiResponse) =>{
   if(req.method === "POST"){
     const session = await getSession({req})
-    session.user
-    const strypeCustomers = await stripe.customers.create({
-      email: session?.user?.email,
-      metadata:
-    })
 
 
-  
+    const user = await fauna.query<User>(
+      qry.Get(
+        qry.Match(
+          qry.Index('user_by_email'),
+          qry.Casefold(session.user.email)
+        )
 
+      )
+    )
 
+    let custormeID = user.data. stripe_custormes_id;
+    if(!custormeID){
+      const strypeCustomers = await stripe.customers.create({
+        email: session?.user?.email
+      })
+      await fauna.query<User>(
+        qry.Update(
+          qry.Ref(qry.Collection('users'),user.ref.id),{
+            data:{
+              stripe_custormes_id: strypeCustomers.id
+            }
+          }
+        )
+      )
 
+      custormeID = strypeCustomers.id
+
+    }
     const StrypecheckoutSession = await stripe.checkout.sessions.create(
       {
-        customer:strypeCustomers.id,
+        customer:custormeID,
         payment_method_types:['card'],
         billing_address_collection:'required',
         line_items:[
