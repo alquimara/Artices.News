@@ -1,7 +1,6 @@
 .headerContainer{
   height: 5rem;
   border-bottom: 1px solid var(--gray_800);
-
 }
 .headerContext{
   max-width: 1120px;
@@ -13,6 +12,7 @@
   img {
     height: 130px;
     z-index: -1;
+    margin-top: 5px;
   }
   nav{
     margin-left: 5rem;
