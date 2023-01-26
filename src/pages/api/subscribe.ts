@@ -10,8 +10,9 @@ type User={
     id: string
   },
   data:{
-    stripe_custormes_id: string
+    stripe_custome_id: string
   }
+
 }
 
 
@@ -30,7 +31,7 @@ export default async(req: NextApiRequest, res: NextApiResponse) =>{
       )
     )
 
-    let custormeID = user.data. stripe_custormes_id;
+    let custormeID = user.data.stripe_customer_id;
     if(!custormeID){
       const strypeCustomers = await stripe.customers.create({
         email: session?.user?.email
@@ -39,7 +40,7 @@ export default async(req: NextApiRequest, res: NextApiResponse) =>{
         qry.Update(
           qry.Ref(qry.Collection('users'),user.ref.id),{
             data:{
-              stripe_custormes_id: strypeCustomers.id
+              stripe_customer_id: strypeCustomers.id
             }
           }
         )
