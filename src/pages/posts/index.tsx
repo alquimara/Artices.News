@@ -5,6 +5,7 @@ import Prismic from "@prismicio/client";
 import{RichText} from 'prismic-dom'
 import { GetStaticProps } from 'next/types';
 import { text } from 'node:stream/consumers';
+import Link from 'next/link'
 
 
 type post = {
@@ -27,11 +28,13 @@ export default  function Posts ({posts}:propPosts){
     <main className={styles.container}>
       <div className={styles.posts}>
         {posts.map(post =>(
-           <a key={post.slug}>
+          <Link key={post.slug} legacyBehavior href={`/posts/${post.slug}`}>
+           <a >
            <time>{post.updateAt}</time>
            <strong>{post.title}</strong>
            <p>{post.excerpt}</p>
          </a>
+         </Link>
         ))}
       </div>
     </main>
