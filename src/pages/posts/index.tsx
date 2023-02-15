@@ -6,6 +6,7 @@ import{RichText} from 'prismic-dom'
 import { GetStaticProps } from 'next/types';
 import { text } from 'node:stream/consumers';
 
+
 type post = {
   slug: string,
   title:string,
