@@ -2,10 +2,22 @@ import Head from 'next/head'
 import styles from './styles.module.scss'
 import { getPrismicClient } from '../../services/prismic';
 import Prismic from "@prismicio/client";
+import{RichText} from 'prismic-dom'
 import { GetStaticProps } from 'next/types';
+import { text } from 'node:stream/consumers';
 
+type post = {
+  slug: string,
+  title:string,
+  excerpt:string,
+  updateAt:string
+}
 
-export default  function Posts (){
+interface propPosts {
+  posts:post[]
+
+}
+export default  function Posts ({posts}:propPosts){
   return(
     <>
     <Head>
@@ -13,26 +25,13 @@ export default  function Posts (){
     </Head>
     <main className={styles.container}>
       <div className={styles.posts}>
-        <a>
-          <time>14 de fevereiro de 2023</time>
-          <strong>Leia Mais</strong>
-          <p>ipsum ipsum ipsum ipsum ipsum ipsumipsum ipsumipsum ipsum ipsum ipsum ipsum ipsumvvipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsum</p>
-        </a>
-        <a>
-          <time>14 de fevereiro de 2023</time>
-          <strong>Leia Mais</strong>
-          <p>ipsum ipsum ipsum ipsum ipsum ipsumipsum ipsumipsum ipsum ipsum ipsum ipsum ipsumvvipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsum</p>
-        </a>
-        <a>
-          <time>14 de fevereiro de 2023</time>
-          <strong>Leia Mais</strong>
-          <p>ipsum ipsum ipsum ipsum ipsum ipsumipsum ipsumipsum ipsum ipsum ipsum ipsum ipsumvvipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsum</p>
-        </a>
-        <a>
-          <time>14 de fevereiro de 2023</time>
-          <strong>Leia Mais</strong>
-          <p>ipsum ipsum ipsum ipsum ipsum ipsumipsum ipsumipsum ipsum ipsum ipsum ipsum ipsumvvipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsumipsum ipsum</p>
-        </a>
+        {posts.map(post =>(
+           <a key={post.slug}>
+           <time>{post.updateAt}</time>
+           <strong>{post.title}</strong>
+           <p>{post.excerpt}</p>
+         </a>
+        ))}
       </div>
     </main>
     </>
@@ -49,9 +48,20 @@ export const getStaticProps: GetStaticProps = async ()=>{
       pageSize:100,
     }
   )
-  console.log(response);
+ const posts = response.results.map(post=>{
+  return{
+    slug:post.uid,
+    title:RichText.asText(post.data.title),
+    excerpt:post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
+    updateAt: new Date(post.last_publication_date!).toLocaleDateString('pt-BR',{
+      day:'2-digit',
+      month:'long',
+      year:'numeric'
+    })
+  }
+ });
 
   return {
-    props:{}
+    props:{posts}
   }
 }
