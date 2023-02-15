@@ -1,0 +1,28 @@
+{
+  "uid": {
+    "__TYPE__": "UIDContent",
+    "value": "corn"
+  },
+  "title": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Reprehenderit tempor eiusmod cillum magna veniam culpa fugiat minim adipisicing."
+        }
+      }
+    ]
+  },
+  "content": {
+    "__TYPE__": "StructuredTextContent",
+    "value": [
+      {
+        "type": "paragraph",
+        "content": {
+          "text": "Dolor duis nisi velit duis eu. Commodo proident adipisicing do aute tempor id Lorem non tempor nulla ullamco voluptate laborum amet nisi."
+        }
+      }
+    ]
+  }
+}
