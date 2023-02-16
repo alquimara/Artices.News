@@ -11,7 +11,6 @@ interface propsPost{
     title:string;
     content:string;
     updateAt: string
-
   }
   
 }
@@ -34,12 +33,21 @@ export default function Post({Post}:propsPost){
 
 
 }
-
 export const getServerSideProps:GetServerSideProps = async({req, params}) =>{
   const session = await getSession({req});
   const {slug}= params
   const prismic = getPrismicClient(req)
   const response = await prismic.getByUID('posts',String(slug),{})
+  console.log(session);
+  if(!session?.activeSubscription){
+    return{
+      redirect:{
+        destination:'/',
+        permanent:false
+      }
+    }
+
+  }
 
 
   const Post = {

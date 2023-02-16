@@ -43,13 +43,12 @@ type Secret=string| string[] | undefined|Buffer
               case 'customer.subscription.deleted':
                 const subscription = event.data.object as Stripe.Subscription;
 
-                await saveSubscription(subscription.id,subscription.customer.toString(),
-                false);
+                await saveSubscription(subscription.id, subscription.customer.toString(), false);
 
                 break
               case 'checkout.session.completed':
                 const checkoutSession = event.data.object as Stripe.Checkout.Session
-                await saveSubscription(checkoutSession.subscription?.toString(),checkoutSession.customer?.toString())
+                await saveSubscription(checkoutSession.subscription?.toString(), checkoutSession.customer?.toString())
                 break;
              
               default:
@@ -59,7 +58,8 @@ type Secret=string| string[] | undefined|Buffer
             
           } catch (error) {
             console.log(error)
-            // return res.json({error:"Webhook handle failed"})
+            
+            return res.status(400).json({ error: "Webhook handler failed." });
             
           }
         
