@@ -20,7 +20,7 @@ type Secret=string| string[] | undefined|Buffer
       bodyParser:false
     }
   }
-  const relevantEvents = new Set(['checkout.session.completed','customer.subscription.created','customer.subscription.updated','customer.subscription.deleted'])
+  const relevantEvents = new Set(['checkout.session.completed','customer.subscription.updated','customer.subscription.deleted'])
 
   // eslint-disable-next-line import/no-anonymous-default-export
   export default async (req:NextApiRequest, res:NextApiResponse)=>{
@@ -38,17 +38,16 @@ type Secret=string| string[] | undefined|Buffer
         if(relevantEvents.has(type)){
           try {
             switch (type) {
-              case 'customer.subscription.created':
               case 'customer.subscription.updated':
               case 'customer.subscription.deleted':
                 const subscription = event.data.object as Stripe.Subscription;
 
                 await saveSubscription(subscription.id, subscription.customer.toString(), false);
-
                 break
+
               case 'checkout.session.completed':
                 const checkoutSession = event.data.object as Stripe.Checkout.Session
-                await saveSubscription(checkoutSession.subscription?.toString(), checkoutSession.customer?.toString())
+                await saveSubscription(checkoutSession.subscription?.toString(), checkoutSession.customer?.toString(),true)
                 break;
              
               default:
@@ -57,8 +56,6 @@ type Secret=string| string[] | undefined|Buffer
              }
             
           } catch (error) {
-            console.log(error)
-            
             return res.status(400).json({ error: "Webhook handler failed." });
             
           }

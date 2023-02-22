@@ -3,7 +3,7 @@ import GithubProvider from "next-auth/providers/github"
 import {fauna} from '../../../services/fauna'
 import {query as qry} from 'faunadb'
 
-export const authOptions = {
+export default NextAuth({
 
 
   // Configure one or more authentication providers
@@ -16,9 +16,10 @@ export const authOptions = {
     // ...add more providers here
   ],
   callbacks: {
-    async session({session}){
+    
+    async session({session}) {
       try {
-        const userActiveSubscription = await fauna.query<string>(
+        const userActiveSubscription = await fauna.query(
           qry.Get(
             qry.Intersection([
               qry.Match(
@@ -34,24 +35,26 @@ export const authOptions = {
                 )
               ),
               qry.Match(
-                qry.Index('subscription_by_status'),
-                "active"
+                qry.Index('subscription_by_status'), "active"
               )
-              ])
+            ])
           )
-  
         )
-        return {
+
+        return { 
           ...session,
-          activeSubscription: userActiveSubscription
+          activeSubscription: userActiveSubscription,
+    
         }
       } catch {
-        return{
+      
+        return { 
           ...session,
-          activeSubscription: null
+          activeSubscription: null,
+          
         }
       }
-
+  
     },
     async signIn({ user, account, profile }) {
       const {email} = user
@@ -81,4 +84,4 @@ export const authOptions = {
     }
 }
 }
-export default NextAuth(authOptions)
+)

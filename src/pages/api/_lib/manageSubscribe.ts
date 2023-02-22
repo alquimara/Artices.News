@@ -1,7 +1,6 @@
 import { fauna } from '../../../services/fauna';
 import {query as qry} from 'faunadb'
 import { stripe } from "../../../services/stripe"
-import { Console } from "console"
 
 export async function saveSubscription(subscriptionId:string,customeId: string,createdAction=false){
 
@@ -22,7 +21,7 @@ export async function saveSubscription(subscriptionId:string,customeId: string,c
 
   const subscriptionData= {
     id: subscription.id,
-    UserId: userRef,
+    userId: userRef,
     status:subscription.status,
     price_id:subscription.items.data[0].price.id
   }
