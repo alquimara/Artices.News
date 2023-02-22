@@ -36,14 +36,14 @@ export default function Post({Post}:propsPost){
 export const getServerSideProps:GetServerSideProps = async({req, params}) =>{
   const session = await getSession({req});
   const {slug}= params
-  console.log(session)
+
   const prismic = getPrismicClient(req)
   const response = await prismic.getByUID('posts',String(slug),{})
   
   if(!session?.activeSubscription){
     return{
       redirect:{
-        destination:'/',
+        destination:`/posts/preview/${slug}`,
         permanent:false
       }
     }
