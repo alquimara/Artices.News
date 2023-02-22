@@ -80,6 +80,7 @@ export const getStaticProps:GetStaticProps = async({params}) =>{
   return {
     props:{
       Post,
-    }
+    },
+    redirect:60*30 // atualizar o post de 30 a 30 minutes
   }
 }
