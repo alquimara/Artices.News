@@ -27,8 +27,8 @@ yarn-error.log*
 .vscode/launch.json*
 
 
-# local env files
-.env*.local
+
+
 
 # vercel
 .vercel

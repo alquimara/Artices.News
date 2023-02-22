@@ -19,7 +19,7 @@ interface propPosts {
   posts:post[]
 
 }
-export default  function Posts ({posts}:propPosts){
+export default function Posts ({posts}:propPosts){
   return(
     <>
     <Head>
