@@ -33,6 +33,7 @@ export default function Post({ Post }: propsPost) {
 
 
 }
+<<<<<<< HEAD
 export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
   const session = await getSession({ req });
   const { slug } = params
@@ -45,6 +46,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
       redirect: {
         destination: '/',
         permanent: false
+=======
+export const getServerSideProps:GetServerSideProps = async({req, params}) =>{
+  const session = await getSession({req});
+  const {slug}= params
+
+  const prismic = getPrismicClient(req)
+  const response = await prismic.getByUID('posts',String(slug),{})
+  
+  if(!session?.activeSubscription){
+    return{
+      redirect:{
+        destination:`/posts/preview/${slug}`,
+        permanent:false
+>>>>>>> 93b3067f2180ab7510abe39c426b18bc5296b3b6
       }
     }
 
