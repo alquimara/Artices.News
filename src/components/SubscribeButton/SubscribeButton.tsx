@@ -24,9 +24,9 @@ export default function SubscribeButton() {
       const response = await api.post('/subscribe')
       const { sessionId } = response.data
       const stripe = await getStripeJs();
-      await stripe.redirectToCheckout({ sessionId })
+      await stripe?.redirectToCheckout({ sessionId })
 
-    } catch (err) {
+    } catch (err: any) {
       alert(err.message);
 
     }

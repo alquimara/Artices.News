@@ -31,7 +31,7 @@ export default function Post({ Post }: propsPost) {
     </main>
   </>)
 }
-export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, params }: any) => {
   const session = await getSession({ req });
   const { slug } = params
   console.log(session)
@@ -48,11 +48,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
     }
 
   }
+  const data: any = response.last_publication_date
   const Post = {
     slug,
     title: RichText.asText(response.data.title),
     content: RichText.asHtml(response.data.content),
-    updateAt: new Date(response.last_publication_date).toLocaleDateString('pt-BR', {
+    updateAt: new Date(data).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'long',
       year: 'numeric'

@@ -1,9 +1,14 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
-import {fauna} from '../../../services/fauna'
-import {query as qry} from 'faunadb'
+import { fauna } from '../../../services/fauna'
+import { query as qry } from 'faunadb'
+
+
+
+
 
 export default NextAuth({
+
 
 
   // Configure one or more authentication providers
@@ -11,13 +16,14 @@ export default NextAuth({
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      scope:'read:user'
-    }),
+      scope: 'read:user'
+    } as any),
+
     // ...add more providers here
   ],
   callbacks: {
-    
-    async session({session}) {
+
+    async session({ session }: any | null) {
       try {
         const userActiveSubscription = await fauna.query(
           qry.Get(
@@ -29,7 +35,7 @@ export default NextAuth({
                   qry.Get(
                     qry.Match(
                       qry.Index('user_by_email'),
-                      qry.Casefold(session.user.email)
+                      qry.Casefold(session?.user.email)
                     )
                   )
                 )
@@ -41,23 +47,23 @@ export default NextAuth({
           )
         )
 
-        return { 
+        return {
           ...session,
           activeSubscription: userActiveSubscription,
-    
+
         }
       } catch {
-      
-        return { 
+
+        return {
           ...session,
           activeSubscription: null,
-          
+
         }
       }
-  
+
     },
-    async signIn({ user, account, profile }) {
-      const {email} = user
+    async signIn({ user, account, profile }: any) {
+      const { email } = user
       try {
         await fauna.query(
           qry.If(
@@ -69,19 +75,19 @@ export default NextAuth({
                 )
               )
             ),
-            qry.Create(qry.Collection('users'),  {data:{email}}),
-            qry.Get(qry.Match(qry.Index('user_by_email'),qry.Casefold(user.email)))
+            qry.Create(qry.Collection('users'), { data: { email } }),
+            qry.Get(qry.Match(qry.Index('user_by_email'), qry.Casefold(user.email)))
           ),
-        
+
         )
-      
+
         return true
-        
-      } catch  {
+
+      } catch {
         return false
-        
+
       }
     }
-}
+  }
 }
 )
