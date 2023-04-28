@@ -45,7 +45,6 @@ export default function PostPreview({ Post }: propsPostPreview) {
           <Link legacyBehavior href="/">
             <a href="">
               Subscribe now 🤗
-
             </a>
           </Link>
 

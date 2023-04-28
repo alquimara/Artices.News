@@ -25,7 +25,6 @@ export default function Post({ Post }: propsPost) {
         <h1>{Post.title}</h1>
         <time>{Post.updateAt}</time>
         <div className={styles.postContent} dangerouslySetInnerHTML={{ __html: Post.content }}>
-
         </div>
       </article>
     </main>
@@ -41,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }: an
   if (!session?.activeSubscription) {
     return {
       redirect: {
-        destination: '/',
+        destination: `/posts/preview/${slug}`,
         permanent: false
 
       }
